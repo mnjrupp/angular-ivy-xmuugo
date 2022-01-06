@@ -16,7 +16,7 @@ export class LineChartComponent implements OnInit,OnDestroy {
   private  margin = {top: 10, right: 30, bottom: 30, left: 60};
   private width = 460 - this.margin.left - this.margin.right;
   private height = 400 - this.margin.top - this.margin.bottom;
-
+  private timeConv = d3.timeParse("%d-%b-%Y");
   constructor(private Service:CommonService) { 
     this.subscriptionName= this.Service.getUpdate().subscribe
     (message => { //message contains the data sent from service
@@ -42,10 +42,10 @@ export class LineChartComponent implements OnInit,OnDestroy {
 
   drawLineChart(data:any[]){
 
-    
+    try{
       // Add X axis --> it is a date format
       var x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.PaymentDate; }))
+        .domain(d3.extent(data, function(d) { return this.timeConv(d.PaymentDate); }))
         .range([ 0, this.width ]);
       this.svg.append("g")
         .attr("transform", "translate(0," + this.height + ")")
@@ -65,10 +65,12 @@ export class LineChartComponent implements OnInit,OnDestroy {
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-          .x(function(d) { return x(d.PaymentDate) })
+          .x(function(d) { return x(this.timeConv(d.PaymentDate)) })
           .y(function(d) { return y(d.CumulativeInterest) }))
           
-  
+    }catch(e){
+      console.log(e);
+    }
 
   }
 

@@ -27,9 +27,9 @@ export class TableComponent implements OnInit,OnDestroy {
     (message => { //message contains the data sent from service
     this.messageReceived = message ;
     console.log('...table.component Received the following message');
-    console.log(message);
+   // console.log(message);
    // console.log('.. results after converting');
-    console.log(this.messageReceived);
+    //console.log(this.messageReceived);
    this.csvArray = JSON.parse(message);
     //this.drawPlot(message);
   });
