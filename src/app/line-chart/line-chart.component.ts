@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { CommonService } from '../common.service';
 import * as d3 from 'd3';
 
+
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.component.html',
@@ -51,7 +52,7 @@ export class LineChartComponent implements OnInit, OnDestroy {
         .scaleTime()
         .domain(
           d3.extent(data, function (d) {
-            console.log(timeConv(d.PaymentDate));
+            //console.log(timeConv(d.PaymentDate));
             return timeConv(d.PaymentDate);
           })
         )
@@ -129,10 +130,16 @@ function mouseover() {
 function mousemove() {
   // recover coordinate we need
   var x0 = x.invert(d3.pointer(event)[0]);
-  var i = bisect(data, x0, 1);
+  var y0 = y.invert(d3.pointer(event)[0])
+  var i = bisect(data, y0,1);
+  var bd = d3.bisector(function(d) {
+    return d.PaymentDate;
+  }).left;
+  //var i = bd(data,timeConv(x0));
+  //console.log(data[0]);
+ 
   var selectedData = data[i]
-  console.log("..mousemove x=" + selectedData.x )
-  console.log("..mousemove y=" + selectedData.y )
+ 
   focus
     .attr("cx", x(selectedData.x))
     .attr("cy", y(selectedData.y))
@@ -163,5 +170,7 @@ function mouseout() {
         'transform',
         'translate(' + this.margin.left + ',' + this.margin.top + ')'
       );
+      
   }
+
 }
