@@ -40,6 +40,7 @@ export class LineChartComponent implements OnInit,OnDestroy {
     var margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
+    
       // Add X axis --> it is a date format
       var x = d3.scaleTime()
         .domain(d3.extent(data, function(d) { return d.PaymentDate; }))
