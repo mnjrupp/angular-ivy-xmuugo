@@ -1,0 +1,31 @@
+<div class="Container">
+<h4> Below you will find the data from your upload</h4>
+
+<table class="table table-striped">
+<thead>
+    <tr>
+      <th>PmtNo.</th>
+      <th>Payment Date</th>
+      <th>Beginning Balance</th>
+      <th>Scheduled Payment</th>
+      <th>Principal</th>
+      <th>Interest</th>
+      <th>Ending Balance</th>
+      <th>Cumulative Interest</th>
+      
+    </tr>
+</thead>
+<tbody>
+  <tr *ngFor="let item of csvArray">
+    <td>{{ item.PmtNo }}</td>
+    <td>{{ item.PaymentDate }}</td>
+    <td>{{ item.BeginningBalance}}</td>
+    <td>{{item.ScheduledPayment}}</td>
+    <td>{{item.Principal}}</td>
+    <td>{{item.Interest}}</td>
+    <td>{{item.EndingBalance}}</td>
+    <td>{{item.CumulativeInterest}}</td>
+  </tr>
+</tbody>
+</table>
+</div>
