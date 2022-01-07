@@ -10,7 +10,7 @@ import {FileUploadComponent} from './file-upload/file-upload.component';
 import {TableComponent} from './table/table.component';
 import {LineChartComponent} from './line-chart/line-chart.component';
 import { HttpClientModule } from '@angular/common/http';
-
+import {LineChart2Component} from './line-chart-2/line-chart-2.component';
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule,HttpClientModule],
@@ -18,7 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
     PieComponent,BarComponent,ScatterComponent,
     FileUploadComponent,
     TableComponent,
-    LineChartComponent ],
+    LineChartComponent,
+    LineChart2Component ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
