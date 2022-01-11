@@ -137,7 +137,7 @@ function mousemove() {
     return d.PaymentDate;
   }).left;
   //var i = bd(data,timeConv(x0));
-  //console.log(data[0]);
+  console.log(data[i]);
  
   var selectedData = data[i]
  
