@@ -28,8 +28,8 @@ export class LineChart2Component implements OnInit,OnDestroy {
       // console.log('.. results after converting');
       // console.log(JSON.stringify(this.messageReceived));
       var parsedD = JSON.parse(message);
-      console.log(message);
-      this.drawLineChart(message);
+      //console.log(message);
+      //this.drawLineChart(message);
 
     });
     }
@@ -38,7 +38,7 @@ export class LineChart2Component implements OnInit,OnDestroy {
     ngOnInit() {
       //this.createSvg();
       //parse data from a csv
-      this.drawLineChart(this.messageReceived);
+      //this.drawLineChart(this.messageReceived);
     }
     ngOnDestroy() {
       this.subscriptionName.unsubscribe();
@@ -90,10 +90,10 @@ const svg = d3.select("div#line").append("svg")
 
 //-----------------------------DATA-----------------------------//
 const timeConv = d3.timeParse("%d-%b-%Y");
-const dataset = JSON.parse(data) //d3.json(data);
-console.log(dataset);
-dataset.toPromise().then(function(data) {
-     slices = data.columns.slice(1).map(function(id) {
+const dataset = JSON.parse(data) // d3.json(data);
+console.log(dataset.length);
+//dataset.toPromise().then(function(data) {
+  /*   slices = data.columns.slice(1).map(function(id) {
         return {
             id: id,
             values: data.map(function(d){
@@ -104,23 +104,22 @@ dataset.toPromise().then(function(data) {
             })
         };
     });
-        
+   */     
 
 //----------------------------SCALES----------------------------//
 const xScale = d3.scaleTime().range([0,width]);
 const yScale = d3.scaleLinear().rangeRound([height, 0]);
 xScale.domain(d3.extent(data, function(d){
-    return timeConv(d.date)}));
+    return timeConv(d.PaymentDate)}));
 
-yScale.domain([(0), d3.max(slices, function(c) {
-    return d3.max(c.values, function(d) {
-        return d.measurement + 4; });
-        })
+yScale.domain([(0), d3.max(data, function (d) {
+    return +d.CumulativeInterest;
+  })
     ]);
 
 //-----------------------------AXES-----------------------------//
 const yaxis = d3.axisLeft()
-    .ticks((slices[0].values).length)
+    .ticks(dataset.length)
     .scale(yScale);
 
 const xaxis = d3.axisBottom()
@@ -130,8 +129,8 @@ const xaxis = d3.axisBottom()
 
 //----------------------------LINES-----------------------------//
 const line = d3.line()
-    .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale(d.measurement); });
+    .x(function(d) { console.log(timeConv(d.PaymentDate));return xScale(timeConv(d.PaymentDate)); })
+    .y(function(d) { return yScale(+d.CumulativeInterest); });
 
 let id = 0;
 const ids = function () {
@@ -163,44 +162,41 @@ svg.append("g")
 
 //----------------------------LINES-----------------------------//
 const lines = svg.selectAll("lines")
-    .data(slices)
+    .data(dataset)
     .enter()
     .append("g");
 
 lines.append("path")
     .attr("class", ids)
-    .attr("d", function(d) { return line(d.values); });
+    .attr("d", function(d) { return line(d); });
 
 lines.append("text")
     .attr("class","serie_label")
-    .datum(function(d) {
-        return {
-            id: d.id,
-            value: d.values[d.values.length - 1]}; })
+    .datum(dataset)
     .attr("transform", function(d) {
-            return "translate(" + (xScale(d.value.date) + 10)  
-            + "," + (yScale(d.value.measurement) + 5 )+ ")"; })
+            return "translate(" + (xScale(timeConv(d.PaymentDate)) + 10)  
+            + "," + (yScale(+d.CumulativeInterest) + 5 )+ ")"; })
     .attr("x", 5)
     .text(function(d) { return ("Serie ") + d.id; });
 
 //---------------------------POINTS-----------------------------// 
 lines.selectAll("points")
-    .data(function(d) {return d.values})
+    .data(dataset)
     .enter()
     .append("circle")
-    .attr("cx", function(d) { return xScale(d.date); })      
-    .attr("cy", function(d) { return yScale(d.measurement); })    
+    .attr("cx", function(d) { return xScale(timeConv(d.PaymentDate)); })      
+    .attr("cy", function(d) { return yScale(+d.CumulativeInterest); })    
     .attr("r", 1)
     .attr("class","point")
     .style("opacity", 1);
 
 //---------------------------EVENTS-----------------------------//    
 lines.selectAll("circles")
-    .data(function(d) { return(d.values); } )
+    .data(dataset )
     .enter()
     .append("circle")
-    .attr("cx", function(d) { return xScale(d.date); })      
-    .attr("cy", function(d) { return yScale(d.measurement); })    
+    .attr("cx", function(d) { return xScale(timeConv(d.PaymentDate)); })      
+    .attr("cy", function(d) { return yScale(+d.CumulativeInterest); })    
     .attr('r', 10)
     .style("opacity", 0)
     .on('mouseover', function(d) {
@@ -209,7 +205,7 @@ lines.selectAll("circles")
             .duration(200)
             .style("opacity", 1);
 
-        tooltip.html(d.measurement)
+        tooltip.html(d.CumulativeInterest)
             .style("left", (d3.event.pageX + 25) + "px")
             .style("top", (d3.event.pageY) + "px");
 
@@ -238,7 +234,7 @@ lines.selectAll("circles")
             .style("opacity", 0);
     });
 
-});
+//});
 }catch(e){
   console.log(e);
 }

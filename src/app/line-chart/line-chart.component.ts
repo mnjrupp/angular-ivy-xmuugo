@@ -26,14 +26,15 @@ export class LineChartComponent implements OnInit, OnDestroy {
       // console.log('.. results after converting');
       // console.log(JSON.stringify(this.messageReceived));
       var parsedD = JSON.parse(message);
+      this.createSvg();
       this.drawLineChart(parsedD);
     });
   }
 
   ngOnInit() {
-    this.createSvg();
+   // this.createSvg();
     //parse data from a csv
-    this.drawLineChart(this.messageReceived);
+   // this.drawLineChart(this.messageReceived);
   }
   ngOnDestroy() {
     this.subscriptionName.unsubscribe();
