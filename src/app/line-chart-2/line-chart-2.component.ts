@@ -34,7 +34,7 @@ export class LineChart2Component implements OnInit,OnDestroy {
 
 
     ngOnInit() {
-      this.createSvg();
+      //this.createSvg();
       //parse data from a csv
       this.drawLineChart(this.messageReceived);
     }
