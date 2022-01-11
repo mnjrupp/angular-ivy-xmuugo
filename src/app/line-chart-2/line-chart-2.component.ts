@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+//import 'rxjs/add/operator/toPromise';
 import { CommonService } from '../common.service';
 import * as d3 from 'd3';
 
@@ -22,12 +23,13 @@ export class LineChart2Component implements OnInit,OnDestroy {
     this.subscriptionName = this.Service.getUpdate().subscribe((message) => {
       //message contains the data sent from service
       this.messageReceived = message;
-      console.log('...line-chart component received the following message');
+      console.log('...line-chart2 component received the following message');
       //console.log(message);
       // console.log('.. results after converting');
       // console.log(JSON.stringify(this.messageReceived));
       var parsedD = JSON.parse(message);
-      this.drawLineChart(parsedD);
+      console.log(message);
+      this.drawLineChart(message);
 
     });
     }
@@ -64,7 +66,7 @@ export class LineChart2Component implements OnInit,OnDestroy {
         console.log(e);
       }
           }
-drawLineChart(data:any[]){
+drawLineChart(data){
       //------------------------1. PREPARATION------------------------//
 //-----------------------------SVG------------------------------//
 const width = 960;
@@ -88,8 +90,9 @@ const svg = d3.select("div#line").append("svg")
 
 //-----------------------------DATA-----------------------------//
 const timeConv = d3.timeParse("%d-%b-%Y");
-const dataset = d3.json(data)
-.then(function(data) {
+const dataset = JSON.parse(data) //d3.json(data);
+console.log(dataset);
+dataset.toPromise().then(function(data) {
      slices = data.columns.slice(1).map(function(id) {
         return {
             id: id,
